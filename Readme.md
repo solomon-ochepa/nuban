@@ -68,7 +68,7 @@ In your app controller
 use SolomonOchepa\Nuban\Nuban;
 
 $nuban = new Nuban;
-$response = $nuban->getAccountDetails('1056684123', '013');
+$response = $nuban->account('1234567890', '0123');
 
 print_r($response);
 ```

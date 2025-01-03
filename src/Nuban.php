@@ -30,6 +30,17 @@ class Nuban
         }
     }
 
+    public function account($number, $bank_code)
+    {
+        $this->url = $this->api . '/verify';
+        $this->params = [
+            'account_number' => $number,
+            'bank_code' => $bank_code,
+        ];
+
+        return $this->__execute('GET');
+    }
+
     public function resolve()
     {
         $this->client = new Client([
@@ -70,14 +81,6 @@ class Nuban
         }
 
         return $token;
-    }
-
-    public function getAccountDetails($accountNumber, $bankCode)
-    {
-        $this->url = $this->APIEndpoint . '/verify';
-        $this->params = ['account_number' => $accountNumber, 'bank_code' => $bankCode];
-
-        return $this->__execute('GET');
     }
 
     private function __execute(string $requestType = 'POST')

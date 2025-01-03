@@ -8,7 +8,7 @@ class NubanTest extends TestCase
     public function test_get_account_details()
     {
         $nuban = app(Nuban::class);
-        $details = $nuban->getAccountDetails('9036604001', '999992'); // put valid account number
+        $details = $nuban->account('1234567890', '0123'); // put valid account number
 
         $this->assertArrayHasKey('account_number', $details);
         $this->assertArrayHasKey('bank_code', $details);
