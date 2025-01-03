@@ -7,7 +7,7 @@ use SolomonOchepa\Nuban\Exceptions\ConfigurationException;
 
 class Nuban
 {
-    private $APIEndpoint = null;
+    private $api = null;
 
     private $url = null;
 
@@ -17,7 +17,7 @@ class Nuban
 
     public $enviroment;
 
-    private string $accessToken;
+    private string $access_token;
 
     public function __construct()
     {
@@ -25,14 +25,14 @@ class Nuban
         $this->setEndpoints();
         $this->resolve();
 
-        if (empty($this->accessToken)) {
+        if (empty($this->access_token)) {
             throw new \Exception('No Nuban token configured.');
         }
     }
 
     public function account($number, $bank_code)
     {
-        $this->url = $this->api . '/verify';
+        $this->url = $this->api.'/verify';
         $this->params = [
             'account_number' => $number,
             'bank_code' => $bank_code,
@@ -44,28 +44,25 @@ class Nuban
     public function resolve()
     {
         $this->client = new Client([
-            'base_uri' => $this->APIEndpoint,
+            'base_uri' => $this->api,
             'headers' => [
                 'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $this->getToken(),
+                'Authorization' => 'Bearer '.$this->getToken(),
             ],
         ]);
     }
 
     public function setKey(): void
     {
-        $this->accessToken = config('nuban.api_token');
+        $this->access_token = config('nuban.api_token');
     }
 
     public function setEndpoints(): void
     {
-        $this->APIEndpoint = config('nuban.host');
+        $this->api = config('nuban.host');
     }
 
-    /**
-     * @return string
-     */
-    public function timeout()
+    public function timeout(): string
     {
         return config('nuban.options.request_timeout', 5);
     }

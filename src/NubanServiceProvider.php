@@ -9,6 +9,7 @@ class NubanServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->bindNubanSingleton();
+
         $this->publishConfig();
     }
 
@@ -22,12 +23,12 @@ class NubanServiceProvider extends ServiceProvider
     public function publishConfig()
     {
         $this->publishes([
-            __DIR__ . '/../config/nuban.php' => config_path('nuban.php'),
+            __DIR__.'/../config/nuban.php' => config_path('nuban.php'),
         ], 'config');
     }
 
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/nuban.php', 'nuban');
+        $this->mergeConfigFrom(__DIR__.'/../config/nuban.php', 'nuban');
     }
 }
