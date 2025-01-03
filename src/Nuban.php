@@ -41,6 +41,14 @@ class Nuban
         return $this->__execute('GET');
     }
 
+    public function banks(bool $json = false)
+    {
+        $this->url = $this->api.'/banks'.($json ? '-json' : '');
+        $this->params = [];
+
+        return $this->__execute('GET');
+    }
+
     public function resolve()
     {
         $this->client = new Client([
