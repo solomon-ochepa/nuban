@@ -1,18 +1,22 @@
 <?php
 
-namespace Donejeh\Nuban;
+namespace SolomonOchepa\Nuban;
 
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Http;
-use Donejeh\Nuban\Exceptions\ConfigurationException;
+use SolomonOchepa\Nuban\Exceptions\ConfigurationException;
 
-class Nubapi
+class Nuban
 {
     private $APIEndpoint = null;
+
     private $url = null;
+
+    public $client;
+
     private $params = [];
 
-    public  $enviroment;
+    public $enviroment;
+
     private string $accessToken;
 
     public function __construct()
@@ -22,33 +26,29 @@ class Nubapi
         $this->resolve();
 
         if (empty($this->accessToken)) {
-            throw new \Exception('No Nubapi token configured.');
+            throw new \Exception('No Nuban token configured.');
         }
-
     }
 
-
-    function resolve()
+    public function resolve()
     {
         $this->client = new Client([
             'base_uri' => $this->APIEndpoint,
             'headers' => [
                 'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . $this->getToken()
-            ]
+                'Authorization' => 'Bearer ' . $this->getToken(),
+            ],
         ]);
     }
 
-
     public function setKey(): void
     {
-        $this->accessToken  = config('nubapi.api_token');
+        $this->accessToken = config('nuban.api_token');
     }
 
-
-    public  function  setEndpoints(): void
+    public function setEndpoints(): void
     {
-        $this->APIEndpoint = config('nubapi.host');
+        $this->APIEndpoint = config('nuban.host');
     }
 
     /**
@@ -56,53 +56,40 @@ class Nubapi
      */
     public function timeout()
     {
-        return config('nubapi.options.request_timeout', 5);
+        return config('nuban.options.request_timeout', 5);
     }
-
 
     protected function getToken()
     {
-        $token = config('nubapi.api_token');
+        $token = config('nuban.api_token');
 
-        if (!$token) {
+        if (! $token) {
             $this->throwUnlessProduction(
-                new ConfigurationException('No Nubapi token configured.')
+                new ConfigurationException('No Nuban token configured.')
             );
         }
 
         return $token;
     }
 
-
     public function getAccountDetails($accountNumber, $bankCode)
     {
         $this->url = $this->APIEndpoint . '/verify';
         $this->params = ['account_number' => $accountNumber, 'bank_code' => $bankCode];
+
         return $this->__execute('GET');
-
     }
-
 
     private function __execute(string $requestType = 'POST')
     {
-
         $options = [];
 
-        if (!empty($this->params)) {
+        if (! empty($this->params)) {
             $options['query'] = array_filter($this->params);
         }
 
-
-       $response = $this->client->request($requestType, $this->url, $options);
-
+        $response = $this->client->request($requestType, $this->url, $options);
 
         return json_decode($response->getBody(), true);
-
     }
-
-
 }
-
-
-
-

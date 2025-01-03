@@ -1,21 +1,24 @@
 {
-    "name": "donejeh/nuban",
+    "name": "solomon-ochepa/nuban",
     "description": "You can use it to get the account name of any bank account in Nigeria",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Donejeh\\Nuban\\": "src/"
+            "SolomonOchepa\\Nuban\\": "src/"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Donejeh\\Nuban\\NubapiServiceProvider"
+                "SolomonOchepa\\Nuban\\NubanServiceProvider"
             ]
         }
     },
     "minimum-stability": "stable",
-    "require": {}
-
+    "require": {
+        "php": "^8.0",
+        "laravel/framework": "^11.0",
+        "laravel/pint": "^1.19"
+    }
 }

@@ -1,16 +1,14 @@
 <?php
 
-use Donejeh\Nuban\Nubapi;
-use Illuminate\Support\Facades\Log;
+use SolomonOchepa\Nuban\Nuban;
 use Tests\TestCase;
 
 class NubanTest extends TestCase
 {
-    public function testGetAccountDetails()
+    public function test_get_account_details()
     {
-
-        $nuban = app(Nubapi::class);
-        $details = $nuban->getAccountDetails('9036604001', '999992'); //put valid account number
+        $nuban = app(Nuban::class);
+        $details = $nuban->getAccountDetails('9036604001', '999992'); // put valid account number
 
         $this->assertArrayHasKey('account_number', $details);
         $this->assertArrayHasKey('bank_code', $details);

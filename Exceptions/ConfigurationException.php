@@ -1,8 +1,5 @@
 <?php
-namespace Donejeh\Nuban\Exceptions;
 
+namespace SolomonOchepa\Nuban\Exceptions;
 
-class ConfigurationException extends NubapiException
-{
-
-}
+class ConfigurationException extends NubanException {}

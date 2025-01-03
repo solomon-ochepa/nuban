@@ -11,39 +11,33 @@ You can use it to get the account name of any bank account in Nigeria
 
 ## install via composer
 ```
-composer require donejeh/nuban
+composer require solomon-ochepa/nuban
 ```
 
 ## Application Service Providers...
 ```
- Donejeh\Nuban\NubapiServiceProvider::class
-
+ SolomonOchepa\Nuban\NubanServiceProvider::class
 ```
 
 ## Publish the config file
 ```cmd
-php artisan vendor:publish --provider="Donejeh\Nuban\NubapiServiceProvider" --tag="config"
+php artisan vendor:publish --provider="SolomonOchepa\Nuban\NubanServiceProvider" --tag="config"
 ```
 
-## Default config file contents 
+## Default config file contents
 
 ```php
 <?php
 
 return [
-
-
     // The Host of the API.
     'host' => env('NUB_API_HOST', 'https://nubapi.com/api'),
-
 
     /**
      * Your API Token from (https://nubapi.com/user/api-tokens)
      *
      */
     'api_token' => env('NUB_API_TOKEN', ''),
-
-
 
      'options' => [
             // Validate number on your server without making an APi request.
@@ -52,16 +46,9 @@ return [
              //This timeout applies to client connections and determine when
              //The whole response must be read before it exceeded
              'request_timeout' => 5,
-
         ]
-
-
-
 ];
-
 ```
-
-
 
 ## API Usage
 Sign up for a developer account by selecting the [Sign Up](https://nubapi.com/register) button.
@@ -76,28 +63,23 @@ You can follow these steps to obtain your API key and configure it in your appli
 3. Once you have your API key, insert it into either your `.env` file or the configuration file.
 
 
- In your app controller 
-```
-use Donejeh\Nuban\Nubapi;
+In your app controller
+```php
+use SolomonOchepa\Nuban\Nuban;
 
-
-$nubanApi = app(NubApi::class);
-$response = $nubanApi->getAccountDetails('1056684123', '013');
+$nuban = new Nuban;
+$response = $nuban->getAccountDetails('1056684123', '013');
 
 print_r($response);
-
-
 ```
 
-
 ## Response JSON
-
-``` 
+```json
 {
     "account_number": "0080******",
     "account_name": "Jane Doe",
-    "first_name: : "Jane"
-    "last_name: : "Doe"
+    "first_name": "Jane",
+    "last_name": "Doe",
     "Bank_name": "ACCESS BANK PLC",
     "bank_code": "044",
     "requests": "Free",
@@ -105,13 +87,9 @@ print_r($response);
 }
 ```
 
-
-
-
-## Useful links 
-  - Bank list Codes https://gist.github.com/donejeh/591f2739d986d7ae6338ea2921d03cf4
-  - Bank list JSON  https://gist.github.com/donejeh/5dd73ca4e2c8c94527219af52a5f53b8
- 
+## Useful links
+  - Bank list Codes https://gist.github.com/solomon-ochepa/591f2739d986d7ae6338ea2921d03cf4
+  - Bank list JSON  https://gist.github.com/solomon-ochepa/5dd73ca4e2c8c94527219af52a5f53b8
 
 For support and inquiry Whatsapp Me https://twitter.com/don_ejeh
 
@@ -121,4 +99,3 @@ Its very legal & safe
 
 ## Security
 Our API is highly secure and our system do not store any bank record
-
