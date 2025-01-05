@@ -80,9 +80,7 @@ class Nuban
         $token = config('nuban.api_token');
 
         if (! $token) {
-            $this->throwUnlessProduction(
-                new ConfigurationException('No Nuban token configured.')
-            );
+            throw_unless(app()->isProduction(), new ConfigurationException('No Nuban token configured.'));
         }
 
         return $token;
