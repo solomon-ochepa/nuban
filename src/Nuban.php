@@ -3,6 +3,8 @@
 namespace SolomonOchepa\Nuban;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use SolomonOchepa\Nuban\Exceptions\ConfigurationException;
 
 class Nuban
@@ -19,6 +21,10 @@ class Nuban
 
     private string $access_token;
 
+    public $cache_key = '';
+
+    public $cache_ttl = now()->tomorrow();
+
     public function __construct()
     {
         $this->setKey();
@@ -30,21 +36,23 @@ class Nuban
         }
     }
 
+    public function banks(bool $json = false)
+    {
+        $this->cache_key = 'banks';
+        $this->url = $this->api.'/banks'.($json ? '-json' : '');
+        $this->params = [];
+
+        return $this->__execute('GET');
+    }
+
     public function account($number, $bank_code)
     {
+        $this->cache_key = "accounts.{$bank_code}.{$number}";
         $this->url = $this->api.'/verify';
         $this->params = [
             'account_number' => $number,
             'bank_code' => $bank_code,
         ];
-
-        return $this->__execute('GET');
-    }
-
-    public function banks(bool $json = false)
-    {
-        $this->url = $this->api.'/banks'.($json ? '-json' : '');
-        $this->params = [];
 
         return $this->__execute('GET');
     }
@@ -86,16 +94,28 @@ class Nuban
         return $token;
     }
 
-    private function __execute(string $requestType = 'POST')
+    private function __execute(string $method = 'POST')
     {
-        $options = [];
+        if (Cache::missing($this->cache_key)) {
+            try {
+                $options = [];
 
-        if (! empty($this->params)) {
-            $options['query'] = array_filter($this->params);
+                if (! empty($this->params)) {
+                    $options['query'] = array_filter($this->params);
+                }
+
+                $response = $this->client->request($method, $this->url, $options);
+            } catch (\Throwable $e) {
+                throw $e->getMessage();
+            }
+
+            if ($response->ok()) {
+                Cache::add($this->cache_key, Arr::sort(json_decode($response->getBody(), true)), $this->cache_ttl);
+            } else {
+                Cache::add($this->cache_key, Arr::sort(json_decode($response->getBody(), true)), now()->addSecond(10));
+            }
         }
 
-        $response = $this->client->request($requestType, $this->url, $options);
-
-        return json_decode($response->getBody(), true);
+        return Cache::add($this->cache_key);
     }
 }
