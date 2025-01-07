@@ -23,10 +23,12 @@ class Nuban
 
     public $cache_key = '';
 
-    public $cache_ttl = now()->tomorrow();
+    public $cache_ttl;
 
     public function __construct()
     {
+        $this->cache_ttl = now()->tomorrow();
+
         $this->setKey();
         $this->setEndpoints();
         $this->resolve();
@@ -109,13 +111,13 @@ class Nuban
                 throw $e->getMessage();
             }
 
-            if ($response->ok()) {
+            if ($response->getBody()) {
                 Cache::add($this->cache_key, Arr::sort(json_decode($response->getBody(), true)), $this->cache_ttl);
             } else {
                 Cache::add($this->cache_key, Arr::sort(json_decode($response->getBody(), true)), now()->addSecond(10));
             }
         }
 
-        return Cache::add($this->cache_key);
+        return Cache::get($this->cache_key);
     }
 }
