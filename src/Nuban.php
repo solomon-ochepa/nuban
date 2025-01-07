@@ -2,10 +2,10 @@
 
 namespace SolomonOchepa\Nuban;
 
+use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
-use SolomonOchepa\Nuban\Exceptions\ConfigurationException;
 
 class Nuban
 {
@@ -100,7 +100,7 @@ class Nuban
         $token = config('nuban.api_token');
 
         if (! $token) {
-            throw_unless(app()->isProduction(), new ConfigurationException('No Nuban token configured.'));
+            throw_unless(app()->isProduction(), new Exception('No Nuban token configured.'));
         }
 
         return $token;
