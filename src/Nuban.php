@@ -40,11 +40,21 @@ class Nuban
 
     public function banks(bool $json = false)
     {
-        $this->cache_key = 'banks';
+        $this->cache_key = 'banks'.($json ? ':json' : '');
         $this->url = $this->api.'/banks'.($json ? '-json' : '');
         $this->params = [];
 
         return $this->__execute('GET');
+    }
+
+    /**
+     * Retrieve a specific bank by code
+     */
+    public function bank(string $code): ?string
+    {
+        $banks = $this->banks();
+
+        return (in_array($code, array_keys($banks))) ? $banks[$code] : null;
     }
 
     public function account($number, $bank_code)
